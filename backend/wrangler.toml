@@ -1,0 +1,31 @@
+# ═══════════════════════════════════════════════════════
+#  wrangler.toml — Cloudflare Workers config
+#  After editing, run:  npx wrangler deploy
+# ═══════════════════════════════════════════════════════
+
+name            = "chatroom-worker"
+main            = "src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ── R2 Bucket (for image + voice storage) ───────────────
+[[r2_buckets]]
+binding    = "MEDIA_BUCKET"
+bucket_name = "chatroom-media"
+
+# ── Environment Variables (non-secret) ──────────────────
+[vars]
+# Set your R2 public URL here after enabling public access on bucket
+R2_PUBLIC_URL = "https://pub-XXXXXXXXXXXX.r2.dev"
+
+# ── Secrets (set via wrangler CLI — do NOT put values here) ──
+# Run these commands after deploy:
+#
+#   npx wrangler secret put JWT_SECRET
+#   npx wrangler secret put FIREBASE_API_KEY
+#   npx wrangler secret put FIREBASE_AUTH_DOMAIN
+#   npx wrangler secret put FIREBASE_DATABASE_URL
+#   npx wrangler secret put FIREBASE_PROJECT_ID
+#   npx wrangler secret put FIREBASE_STORAGE_BUCKET
+#   npx wrangler secret put FIREBASE_MESSAGING_SENDER_ID
+#   npx wrangler secret put FIREBASE_APP_ID

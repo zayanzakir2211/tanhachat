@@ -1,0 +1,25 @@
+{
+  "rules": {
+    ".read":  false,
+    ".write": false,
+
+    "users": {
+      "$username": {
+        ".read":  false,
+        ".write": false
+      }
+    },
+
+    "messages": {
+      "room1": {
+        ".read":  false,
+        ".write": false
+      }
+    },
+
+    "presence": {
+      ".read":  false,
+      ".write": false
+    }
+  }
+}

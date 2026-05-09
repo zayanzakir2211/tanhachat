@@ -3,29 +3,25 @@
 #  After editing, run:  npx wrangler deploy
 # ═══════════════════════════════════════════════════════
 
-name            = "chatroom-worker"
-main            = "src/index.js"
-compatibility_date = "2024-01-01"
+name                = "chatroom-worker"
+main                = "src/index.js"
+compatibility_date  = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-# ── R2 Bucket (for image + voice storage) ───────────────
-[[r2_buckets]]
-binding    = "MEDIA_BUCKET"
-bucket_name = "chatroom-media"
+# No R2 bucket needed — media is stored as base64 in Firebase.
 
-# ── Environment Variables (non-secret) ──────────────────
+# ── Firebase config (non-secret, safe to commit) ─────────
 [vars]
-# Set your R2 public URL here after enabling public access on bucket
-R2_PUBLIC_URL = "https://pub-XXXXXXXXXXXX.r2.dev"
+FIREBASE_API_KEY             = "AIzaSyD4CDiXrGMgpI7C5VF0v2KoM8RU-qYAVs4"
+FIREBASE_AUTH_DOMAIN         = "chatroom-app-8d1cd.firebaseapp.com"
+FIREBASE_DATABASE_URL        = "https://chatroom-app-8d1cd-default-rtdb.asia-southeast1.firebasedatabase.app"
+FIREBASE_PROJECT_ID          = "chatroom-app-8d1cd"
+FIREBASE_STORAGE_BUCKET      = "chatroom-app-8d1cd.firebasestorage.app"
+FIREBASE_MESSAGING_SENDER_ID = "63047563322"
+FIREBASE_APP_ID              = "1:63047563322:web:ba91deef4b76208974dd03"
 
-# ── Secrets (set via wrangler CLI — do NOT put values here) ──
-# Run these commands after deploy:
+# ── Only this one secret still needs the wrangler CLI ────
+# Run once after deploy:
 #
 #   npx wrangler secret put JWT_SECRET
-#   npx wrangler secret put FIREBASE_API_KEY
-#   npx wrangler secret put FIREBASE_AUTH_DOMAIN
-#   npx wrangler secret put FIREBASE_DATABASE_URL
-#   npx wrangler secret put FIREBASE_PROJECT_ID
-#   npx wrangler secret put FIREBASE_STORAGE_BUCKET
-#   npx wrangler secret put FIREBASE_MESSAGING_SENDER_ID
-#   npx wrangler secret put FIREBASE_APP_ID
+#   (type any long random string when prompted)

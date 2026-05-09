@@ -74,16 +74,24 @@ async function hashPassword(password) {
 }
 
 // ── CORS ─────────────────────────────────────────────────
-function cors(origin = '*') {
+const ALLOWED_ORIGINS = [
+  'https://tanhachat.pages.dev',
+  'http://localhost',
+  'http://127.0.0.1',
+  'null' // file:// opens as origin "null"
+];
+
+function cors(origin) {
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
-    'Access-Control-Allow-Origin':  origin,
+    'Access-Control-Allow-Origin':  allowed,
     'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type,Authorization',
     'Access-Control-Max-Age':       '86400'
   };
 }
 
-function json(data, status = 200, corsOrigin = '*') {
+function json(data, status = 200, corsOrigin) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { 'Content-Type': 'application/json', ...cors(corsOrigin) }

@@ -23,5 +23,5 @@ FIREBASE_APP_ID              = "1:63047563322:web:ba91deef4b76208974dd03"
 # ── Only this one secret still needs the wrangler CLI ────
 # Run once after deploy:
 #
-#   npx wrangler secret put JWT_SECRET
+#   npx wrangler secret put 123456789123456789
 #   (type any long random string when prompted)

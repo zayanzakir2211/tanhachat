@@ -739,112 +739,186 @@ button {
 textarea::-webkit-scrollbar { width: 4px; }
 textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-/* ── RESPONSIVE ───────────────────────────────────── */
-@media (max-width: 900px) {
-  .chat-layout { flex-direction: column; }
+/* ═══════════════════════════════════════════════════
+   MOBILE — slim top header replaces full sidebar
+   TABLET — minor sidebar shrink
+═══════════════════════════════════════════════════ */
 
+/* Fix font-size to 16px on inputs to prevent iOS zoom */
+.field input { font-size: 16px; }
+#msg-input   { font-size: 16px; }
+#edit-input  { font-size: 16px; }
+
+/* Use dynamic viewport height everywhere */
+.screen, .chat-layout { height: 100dvh; }
+
+/* Modal padding so it clears keyboard on mobile */
+.modal { padding: 16px; }
+.modal-box { width: 100%; max-width: 380px; }
+
+/* Input bar always flexes correctly */
+.input-bar {
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  padding: 10px 12px max(12px, env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}
+
+/* reply bar never shrinks */
+.reply-bar { flex-shrink: 0; }
+
+/* Tablet — minor sidebar shrink */
+@media (min-width: 641px) and (max-width: 900px) {
+  .sidebar { width: 170px; min-width: 170px; padding: 14px 12px; }
+  .msg-row  { max-width: 78%; }
+}
+
+/* ── MOBILE (≤640px) ────────────────────────────── */
+@media (max-width: 640px) {
+
+  #chat-screen  { flex-direction: column; }
+  .chat-layout  { flex-direction: column; }
+
+  /* Sidebar → compact horizontal header */
   .sidebar {
     width: 100%;
     min-width: 0;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
     border-right: none;
     border-bottom: 1px solid var(--border);
-    padding: 12px 12px 10px;
+    flex-shrink: 0;
+    height: 50px;
+    overflow: hidden;
   }
 
+  /* hide the sidebar's own logout-btn placement;
+     the button still exists and stays at end of flex row */
+  .sidebar-top { flex-shrink: 0; gap: 0; }
+
+  /* me-tag: compact pill */
+  .me-tag {
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .me-tag .avatar { width: 24px; height: 24px; font-size: 10px; }
+  .me-tag span:not(.online-dot) { font-size: 11px; max-width: 70px; }
+  .me-tag .online-dot { display: none; }
+
+  /* ONLINE label hidden */
+  .online-label { display: none; }
+
+  /* Online users: horizontal scrolling pills */
   .online-users {
+    flex: 1;
     flex-direction: row;
-    gap: 8px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding-bottom: 4px;
+    gap: 6px;
+    padding: 0;
+    align-items: center;
+    scrollbar-width: none;
+    min-height: 0;
   }
+  .online-users::-webkit-scrollbar { display: none; }
 
   .online-user-item {
     flex-shrink: 0;
-    background: var(--surface2);
-    border: 1px solid var(--border);
+    padding: 3px 6px;
+    gap: 5px;
   }
+  .online-user-item .avatar { width: 20px; height: 20px; font-size: 9px; }
+  .online-user-item span { font-size: 11px; white-space: nowrap; }
 
-  .online-user-item span { white-space: nowrap; }
-  .chat-main { min-height: 0; }
-}
+  /* Logout btn at far right */
+  #logout-btn { margin-left: auto; order: 99; flex-shrink: 0; }
 
-@media (max-width: 600px) {
-  body { font-size: 13px; }
+  /* Chat main fills remaining space */
+  .chat-main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
-  .login-box {
-    width: 92vw;
-    padding: 28px 22px;
-    gap: 22px;
-  }
+  /* Messages */
+  .messages-area { padding: 10px 10px 8px; flex: 1; min-height: 0; }
+  .msg-row        { max-width: 84%; }
 
-  .login-header h1 {
-    font-size: 20px;
-    letter-spacing: 3px;
-  }
-
-  .field input { padding: 9px 10px; }
-  #login-btn, .secondary-btn { padding: 10px 14px; }
-
-  .messages-area { padding: 14px 12px 10px; }
-  .msg-row { max-width: 88%; }
-
-  .bubble {
-    padding: 8px 11px;
-    font-size: 13px;
-  }
-
-  .msg-meta { padding: 0 6px 2px; }
+  .bubble { padding: 8px 11px; font-size: 14px; }
+  .msg-meta { padding: 0 4px 2px; }
   .msg-meta .name { font-size: 10px; }
-  .msg-meta .ts { font-size: 9px; }
+  .msg-meta .ts   { font-size: 9px; }
 
-  .msg-img {
-    max-width: 70vw;
-    max-height: 180px;
-  }
+  .msg-img { max-width: 68vw; max-height: 200px; }
 
-  .reply-bar { padding: 6px 12px; }
+  /* Reply bar */
+  .reply-bar { padding: 6px 10px; }
 
+  /* Input bar — single clean row, no wrap */
   .input-bar {
-    padding: 10px 12px 12px;
+    padding: 8px 10px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
     gap: 6px;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    width: 100%;
   }
 
   .attach-btn, .voice-btn, .send-btn {
-    width: 32px;
-    height: 32px;
+    width: 40px; height: 40px;
   }
 
   #msg-input {
-    min-height: 34px;
-    font-size: 13px;
-    flex: 1 1 100%;
-    width: 100%;
+    flex: 1;
     min-width: 0;
+    min-height: 40px;
+    max-height: 100px;
   }
 
+  /* Voice indicator floats above input */
   .voice-recording-indicator {
-    width: 100%;
-    order: 3;
-    margin-left: 2px;
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 16px;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
   }
 
-  .voice-msg {
-    min-width: 150px;
-    gap: 8px;
+  /* Emoji picker: centered above input bar */
+  .emoji-picker {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    bottom: 72px !important;
+    top: auto !important;
+    padding: 10px;
+    gap: 4px;
+    border-radius: 12px;
   }
+  .emoji-picker button { font-size: 26px; padding: 6px 7px; }
 
+  /* Context menu: bigger touch targets */
+  .ctx-menu { min-width: 160px; }
+  .ctx-menu button { padding: 14px 18px; font-size: 15px; }
+
+  /* Login */
+  .login-box {
+    width: 92vw;
+    max-width: 400px;
+    padding: 28px 22px;
+    gap: 22px;
+  }
+  .login-header h1 { font-size: 20px; letter-spacing: 3px; }
+  #login-btn     { padding: 13px 16px; }
+  .secondary-btn { padding: 12px 16px; }
+
+  /* Lightbox */
+  #lightbox-close { top: 10px; right: 10px; width: 36px; height: 36px; }
+
+  /* Voice msg bubble */
+  .voice-msg      { min-width: 140px; }
   .voice-waveform { height: 20px; }
-  .modal-box { width: 90vw; }
-  .ctx-menu { min-width: 120px; }
-
-  #lightbox-close {
-    top: 10px;
-    right: 10px;
-    width: 32px;
-    height: 32px;
-  }
 }

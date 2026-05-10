@@ -144,8 +144,9 @@ async function fetchMessages() {
       } else {
         messages[msg.id] = msg;
         renderMessage(msg);
-        if (msg.timestamp > lastTs) lastTs = msg.timestamp;
       }
+      // always track latest timestamp
+      if (msg.timestamp > lastTs) lastTs = msg.timestamp;
     });
   } catch (e) { /* silent */ }
 }

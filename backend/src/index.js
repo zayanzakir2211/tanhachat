@@ -173,15 +173,21 @@ async function route(request, env, ch) {
   // ── GET /messages ──────────────────────────────────
   if (path === '/messages' && method === 'GET') {
     const since = parseInt(url.searchParams.get('since') || '0');
-    const snap  = await get(ref(db, 'messages/room1'));
+    let snap;
+    try {
+      snap = await get(ref(db, 'messages/room1'));
+    } catch(e) {
+      console.error('messages fetch error:', e.message);
+      return J({ messages: [] });
+    }
 
     const msgs = [];
-    if (snap.exists()) {
+    if (snap && snap.exists()) {
       snap.forEach(child => {
         const m = child.val();
-        if (m.timestamp > since) msgs.push(m);
+        // on first load (since=0) get all; otherwise only newer
+        if (since === 0 || m.timestamp > since) msgs.push(m);
       });
-      // sort by timestamp ascending
       msgs.sort((a, b) => a.timestamp - b.timestamp);
     }
     return J({ messages: msgs });

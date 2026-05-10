@@ -1,25 +1,22 @@
 {
   "rules": {
-    ".read":  false,
-    ".write": false,
-
     "users": {
       "$username": {
-        ".read":  false,
-        ".write": false
+        ".read": true,
+        ".write": true
       }
     },
-
     "messages": {
       "room1": {
-        ".read":  false,
-        ".write": false
+        ".read": true,
+        ".write": true
       }
     },
-
     "presence": {
-      ".read":  false,
-      ".write": false
+      "$username": {
+        ".read": true,
+        ".write": true
+      }
     }
   }
 }

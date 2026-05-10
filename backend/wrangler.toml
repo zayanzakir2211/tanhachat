@@ -1,26 +1,19 @@
 # ═══════════════════════════════════════════════════════
 #  wrangler.toml — Cloudflare Workers config
-#  After editing, run:  npx wrangler deploy
 # ═══════════════════════════════════════════════════════
 
 name                = "chatroom-worker"
 main                = "src/index.js"
 compatibility_date  = "2024-01-01"
-compatibility_flags = ["nodejs_compat"]
 
-# No R2 bucket needed — media is stored as base64 in Firebase.
+# No npm dependencies — uses Firebase REST API directly.
 
-# ── Firebase config (non-secret, safe to commit) ─────────
 [vars]
-FIREBASE_API_KEY             = "AIzaSyD4CDiXrGMgpI7C5VF0v2KoM8RU-qYAVs4"
-FIREBASE_AUTH_DOMAIN         = "chatroom-app-8d1cd.firebaseapp.com"
-FIREBASE_DATABASE_URL        = "https://chatroom-app-8d1cd-default-rtdb.asia-southeast1.firebasedatabase.app"
-FIREBASE_PROJECT_ID          = "chatroom-app-8d1cd"
-FIREBASE_STORAGE_BUCKET      = "chatroom-app-8d1cd.firebasestorage.app"
-FIREBASE_MESSAGING_SENDER_ID = "63047563322"
-FIREBASE_APP_ID              = "1:63047563322:web:ba91deef4b76208974dd03"
-JWT_SECRET = "123456789123456789"
-# ── Only this one secret still needs the wrangler CLI ────
-# Run once after deploy:
-#
-#   (type any long random string when prompted)
+FIREBASE_DATABASE_URL = "https://chatroom-app-8d1cd-default-rtdb.asia-southeast1.firebasedatabase.app"
+JWT_SECRET            = "123456789123456789"
+
+# ── FIREBASE_SECRET: get this from Firebase Console ───
+# Project Settings → Service Accounts → Database Secrets
+# (scroll to bottom, click "Show" next to the secret)
+# Then add it here:
+FIREBASE_SECRET = "RA6bMLPgCxvY6ly2E0MwzrlVGeUknCOvXHqrt8ab"

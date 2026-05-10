@@ -67,6 +67,31 @@ const roomTabBtn      = document.getElementById('room-tab-btn');
 const dmConvoList     = document.getElementById('dm-convo-list');
 const dmListSection   = document.getElementById('dm-list-section');
 
+const sidebar         = document.getElementById('sidebar');
+const chatMain        = document.getElementById('chat-main');
+const mobileBackBtn   = document.getElementById('mobile-back-btn');
+
+// ── MOBILE NAVIGATION ─────────────────────────────────────
+function isMobile() { return window.innerWidth <= 640; }
+
+function mobileShowList() {
+  sidebar.classList.remove('mobile-hidden');
+  chatMain.classList.add('mobile-hidden');
+}
+
+function mobileShowChat() {
+  sidebar.classList.add('mobile-hidden');
+  chatMain.classList.remove('mobile-hidden');
+}
+
+mobileBackBtn.addEventListener('click', () => {
+  mobileShowList();
+  clearInterval(dmPollTimer);
+  currentView = 'room';
+  currentDmUser = null;
+  updateDmActiveState(null);
+});
+
 // ── AUTH ─────────────────────────────────────────────────
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -114,7 +139,14 @@ function enterChat() {
   chatScreen.classList.add('active');
   sidebarUsername.textContent = currentUser.username;
   sidebarAvatar.textContent = currentUser.username[0].toUpperCase();
-  showRoom();
+  // On mobile: start on the list screen; on desktop: open room immediately
+  if (isMobile()) {
+    mobileShowList();
+    // still load room data in background but don't render until opened
+    currentView = 'room';
+  } else {
+    showRoom();
+  }
   startPolling();
 }
 
@@ -232,12 +264,13 @@ function showRoom() {
 
   messagesArea.innerHTML = '<div class="day-divider"><span>TODAY</span></div>';
 
-  // re-render room messages already in memory
   const sorted = Object.values(messages).sort((a,b) => a.timestamp - b.timestamp);
   sorted.forEach(msg => renderMessage(msg, 'room'));
 
   msgInput.placeholder = 'Say something…';
   updateDmActiveState(null);
+
+  if (isMobile()) mobileShowChat();
 }
 
 function openDmWith(otherUser) {
@@ -255,6 +288,8 @@ function openDmWith(otherUser) {
 
   startDmPolling(otherUser);
   updateDmActiveState(otherUser);
+
+  if (isMobile()) mobileShowChat();
 }
 
 // ── RENDER ONLINE USERS ───────────────────────────────────
@@ -269,7 +304,7 @@ function renderOnlineUsers(users) {
       <span>${u}</span>
       <span class="online-dot" style="margin-left:auto"></span>
       <button class="dm-start-btn" title="Message ${u}">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <i class="fa-solid fa-message" style="font-size:13px"></i>
       </button>`;
     el.querySelector('.dm-start-btn').addEventListener('click', () => openDmWith(u));
     onlineUsers.appendChild(el);
@@ -693,6 +728,16 @@ function formatDuration(secs) {
   const s = secs % 60;
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
+
+// ── RESIZE: fix layout when switching desktop/mobile ─────
+window.addEventListener('resize', () => {
+  if (!currentUser) return;
+  if (!isMobile()) {
+    // Desktop: always show both
+    sidebar.classList.remove('mobile-hidden');
+    chatMain.classList.remove('mobile-hidden');
+  }
+});
 
 // ── AUTO-LOGIN ────────────────────────────────────────────
 (function init() {

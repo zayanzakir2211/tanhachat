@@ -773,107 +773,185 @@ textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2p
   .msg-row  { max-width: 78%; }
 }
 
-/* ── MOBILE (≤640px) ────────────────────────────── */
+/* ── MOBILE (≤640px) — Messenger-style screen navigation ── */
 @media (max-width: 640px) {
 
-  #chat-screen  { flex-direction: column; }
-  .chat-layout  { flex-direction: column; }
+  /* ── LAYOUT: full screen stacking ── */
+  #chat-screen { flex-direction: column; }
+  .chat-layout { flex-direction: column; height: 100dvh; }
 
-  /* Sidebar → compact horizontal header */
+  /* ── SIDEBAR becomes the CHAT LIST SCREEN ── */
   .sidebar {
+    position: fixed;
+    inset: 0;
     width: 100%;
     min-width: 0;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 12px;
-    gap: 8px;
+    height: 100dvh;
+    flex-direction: column;
+    padding: 0;
+    gap: 0;
     border-right: none;
+    background: var(--bg);
+    z-index: 200;
+    overflow: hidden;
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    overflow: auto;
+  }
+
+  /* When chat is open, slide sidebar off-screen left */
+  .sidebar.mobile-hidden {
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+
+  /* ── MOBILE SIDEBAR TOP BAR ── */
+  .sidebar-top {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px 10px;
+    padding-top: max(14px, env(safe-area-inset-top));
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
-    height: 50px;
-    overflow: hidden;
+    gap: 10px;
   }
 
-  /* hide the sidebar's own logout-btn placement;
-     the button still exists and stays at end of flex row */
-  .sidebar-top { flex-shrink: 0; gap: 0; }
-
-  /* me-tag: compact pill */
-  .me-tag {
-    padding: 4px 8px;
-    border: none;
-    background: transparent;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .me-tag .avatar { width: 24px; height: 24px; font-size: 10px; }
-  .me-tag span:not(.online-dot) { font-size: 11px; max-width: 70px; }
-  .me-tag .online-dot { display: none; }
-
-  /* ONLINE label hidden */
-  .online-label { display: none; }
-
-  /* Online users: horizontal scrolling pills */
-  .online-users {
+  .app-name {
+    font-size: 18px;
+    letter-spacing: 3px;
     flex: 1;
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    gap: 6px;
-    padding: 0;
-    align-items: center;
-    scrollbar-width: none;
-    min-height: 0;
   }
-  .online-users::-webkit-scrollbar { display: none; }
+
+  /* me-tag in sidebar */
+  .me-tag {
+    margin: 12px 16px 0;
+    padding: 10px 14px;
+  }
+  .me-tag .avatar { width: 30px; height: 30px; font-size: 12px; }
+
+  /* Section labels */
+  .sidebar-section-label {
+    padding: 14px 16px 6px;
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+
+  /* Room tab button — full width list item */
+  .room-tab-btn {
+    margin: 0 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  /* Online users — vertical list style */
+  .online-users {
+    flex-direction: column !important;
+    max-height: none !important;
+    flex: none !important;
+    overflow: visible !important;
+    gap: 2px;
+    padding: 0 8px;
+  }
 
   .online-user-item {
-    flex-shrink: 0;
-    padding: 3px 6px;
-    gap: 5px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    gap: 12px;
   }
-  .online-user-item .avatar { width: 20px; height: 20px; font-size: 9px; }
-  .online-user-item span { font-size: 11px; white-space: nowrap; }
+  .online-user-item:hover { background: var(--surface2); }
+  .online-user-item .avatar { width: 36px; height: 36px; font-size: 14px; }
+  .online-user-item > span:not(.online-dot) { font-size: 14px; color: var(--text); }
+  .online-user-item .online-dot { margin-left: auto; }
+  .dm-start-btn { opacity: 1; width: 32px; height: 32px; justify-content: center; }
 
-  /* Logout btn at far right */
-  #logout-btn { margin-left: auto; order: 99; flex-shrink: 0; }
+  /* DM convo list */
+  .dm-convo-list {
+    max-height: none;
+    padding: 0 8px;
+    gap: 2px;
+  }
+  .dm-convo-item {
+    padding: 10px 16px;
+    border-radius: 10px;
+    gap: 12px;
+  }
+  .dm-convo-item .avatar { width: 40px; height: 40px; font-size: 15px; }
+  .dm-convo-name { font-size: 14px; }
+  .dm-convo-preview { font-size: 12px; }
 
-  /* Chat main fills remaining space */
-  .chat-main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  /* ── CHAT MAIN — full screen ── */
+  .chat-main {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    background: var(--bg);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* When on list view, push chat off-screen right */
+  .chat-main.mobile-hidden {
+    transform: translateX(100%);
+    pointer-events: none;
+  }
+
+  /* ── MOBILE CHAT HEADER ── */
+  .chat-header {
+    padding: 0 12px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    height: auto;
+    min-height: 56px;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  /* Back button */
+  .mobile-back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    color: var(--accent);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 18px;
+    padding: 0;
+  }
+  .mobile-back-btn:hover { background: var(--surface2); }
+
+  .chat-header-title { font-size: 15px; }
+  .chat-header-sub   { font-size: 11px; }
 
   /* Messages */
   .messages-area { padding: 10px 10px 8px; flex: 1; min-height: 0; }
   .msg-row        { max-width: 84%; }
-
   .bubble { padding: 8px 11px; font-size: 14px; }
   .msg-meta { padding: 0 4px 2px; }
   .msg-meta .name { font-size: 10px; }
   .msg-meta .ts   { font-size: 9px; }
-
   .msg-img { max-width: 68vw; max-height: 200px; }
 
   /* Reply bar */
-  .reply-bar { padding: 6px 10px; }
+  .reply-bar { padding: 6px 10px; flex-shrink: 0; }
 
-  /* Input bar — single clean row, no wrap */
+  /* Input bar */
   .input-bar {
     padding: 8px 10px;
     padding-bottom: max(10px, env(safe-area-inset-bottom));
     gap: 6px;
+    flex-shrink: 0;
   }
+  .attach-btn, .voice-btn, .send-btn { width: 40px; height: 40px; }
+  #msg-input { flex: 1; min-width: 0; min-height: 40px; max-height: 100px; }
 
-  .attach-btn, .voice-btn, .send-btn {
-    width: 40px; height: 40px;
-  }
-
-  #msg-input {
-    flex: 1;
-    min-width: 0;
-    min-height: 40px;
-    max-height: 100px;
-  }
-
-  /* Voice indicator floats above input */
+  /* Voice indicator */
   .voice-recording-indicator {
     position: fixed;
     bottom: 70px;
@@ -884,11 +962,11 @@ textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2p
     border-radius: 20px;
     padding: 5px 16px;
     white-space: nowrap;
-    z-index: 100;
+    z-index: 300;
     pointer-events: none;
   }
 
-  /* Emoji picker: centered above input bar */
+  /* Emoji picker */
   .emoji-picker {
     left: 50% !important;
     transform: translateX(-50%) !important;
@@ -897,11 +975,12 @@ textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2p
     padding: 10px;
     gap: 4px;
     border-radius: 12px;
+    z-index: 400;
   }
   .emoji-picker button { font-size: 26px; padding: 6px 7px; }
 
-  /* Context menu: bigger touch targets */
-  .ctx-menu { min-width: 160px; }
+  /* Context menu */
+  .ctx-menu { min-width: 160px; z-index: 400; }
   .ctx-menu button { padding: 14px 18px; font-size: 15px; }
 
   /* Login */
@@ -918,9 +997,14 @@ textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2p
   /* Lightbox */
   #lightbox-close { top: 10px; right: 10px; width: 36px; height: 36px; }
 
-  /* Voice msg bubble */
+  /* Voice msg */
   .voice-msg      { min-width: 140px; }
   .voice-waveform { height: 20px; }
+}
+
+/* ── Desktop: hide back button ── */
+@media (min-width: 641px) {
+  .mobile-back-btn { display: none; }
 }
 /* ══════════════════════════════════════════════════════
    DM & NEW SIDEBAR ADDITIONS

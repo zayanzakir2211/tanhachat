@@ -922,3 +922,168 @@ textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2p
   .voice-msg      { min-width: 140px; }
   .voice-waveform { height: 20px; }
 }
+/* ══════════════════════════════════════════════════════
+   DM & NEW SIDEBAR ADDITIONS
+   ══════════════════════════════════════════════════════ */
+
+/* App name replaces room-tag */
+.app-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  font-weight: 500;
+}
+
+/* Section labels */
+.sidebar-section-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  padding: 4px 4px 0;
+  margin-top: 4px;
+}
+
+/* Room tab button */
+.room-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  color: var(--muted);
+  padding: 7px 10px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border: none;
+  width: 100%;
+}
+.room-tab-btn:hover { background: var(--surface2); color: var(--text); }
+.room-tab-btn.active { background: var(--surface2); color: var(--accent); }
+
+/* DM start button on online users */
+.dm-start-btn {
+  background: transparent;
+  color: var(--muted);
+  padding: 3px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.online-user-item:hover .dm-start-btn { opacity: 1; }
+.dm-start-btn:hover { color: var(--accent2); }
+
+/* DM conversation list */
+.dm-convo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  max-height: 180px;
+}
+.dm-convo-list::-webkit-scrollbar { width: 3px; }
+.dm-convo-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.dm-convo-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dm-convo-item:hover { background: var(--surface2); }
+.dm-convo-item.active { background: var(--surface2); border-left: 2px solid var(--accent2); }
+
+.dm-convo-item .avatar {
+  width: 26px; height: 26px;
+  font-size: 10px;
+  background: rgba(71, 255, 232, 0.15);
+  color: var(--accent2);
+  border: 1px solid rgba(71, 255, 232, 0.3);
+  flex-shrink: 0;
+}
+
+.dm-convo-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.dm-convo-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dm-convo-preview {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dm-empty {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 6px 8px;
+  font-style: italic;
+}
+
+/* Chat header */
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+  gap: 12px;
+}
+.chat-header-info {
+  display: flex;
+  flex-direction: column;
+}
+.chat-header-title {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+.chat-header-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* DM bubble accent */
+.dm-bubble-hint {
+  border-left: 2px solid var(--accent2);
+}
+
+/* Sidebar overflow — make it scroll as needed */
+.sidebar {
+  overflow-y: auto;
+  gap: 8px !important;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* Online users — limit height so DMs are visible */
+.online-users {
+  max-height: 140px !important;
+  flex: none !important;
+}

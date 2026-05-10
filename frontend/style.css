@@ -809,6 +809,8 @@ textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2p
     padding: 10px 12px 12px;
     gap: 6px;
     flex-wrap: wrap;
+    align-items: flex-start;
+    width: 100%;
   }
 
   .attach-btn, .voice-btn, .send-btn {
@@ -819,6 +821,9 @@ textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2p
   #msg-input {
     min-height: 34px;
     font-size: 13px;
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
   }
 
   .voice-recording-indicator {

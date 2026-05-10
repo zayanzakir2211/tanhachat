@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════
 
 import { initializeApp, getApps } from 'firebase/app';
-import { getDatabase, ref, set, get, push, query, orderByChild, startAt } from 'firebase/database';
+import { getDatabase, ref, set, get, push } from 'firebase/database';
 
 // ── ALLOWED ORIGINS ───────────────────────────────────
 const ALLOWED_ORIGINS = [
@@ -172,9 +172,8 @@ async function route(request, env, ch) {
 
   // ── GET /messages ──────────────────────────────────
   if (path === '/messages' && method === 'GET') {
-    const since   = parseInt(url.searchParams.get('since') || '0');
-    const msgsRef = query(ref(db, 'messages/room1'), orderByChild('timestamp'), startAt(since || 0));
-    const snap    = await get(msgsRef);
+    const since = parseInt(url.searchParams.get('since') || '0');
+    const snap  = await get(ref(db, 'messages/room1'));
 
     const msgs = [];
     if (snap.exists()) {
@@ -182,6 +181,8 @@ async function route(request, env, ch) {
         const m = child.val();
         if (m.timestamp > since) msgs.push(m);
       });
+      // sort by timestamp ascending
+      msgs.sort((a, b) => a.timestamp - b.timestamp);
     }
     return J({ messages: msgs });
   }

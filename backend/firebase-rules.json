@@ -9,7 +9,8 @@
     "messages": {
       "room1": {
         ".read": true,
-        ".write": true
+        ".write": true,
+        ".indexOn": ["timestamp"]
       }
     },
     "presence": {
